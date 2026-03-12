@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark background -->
+  <rect width="32" height="32" rx="4" fill="#1a1a1a"/>
+  
+  <!-- Simple stack representation -->
+  <!-- Left stack (A) - blue -->
+  <rect x="6" y="12" width="8" height="3" fill="#40c4ff"/>
+  <rect x="6" y="16" width="6" height="3" fill="#40c4ff"/>
+  <rect x="6" y="20" width="10" height="3" fill="#40c4ff"/>
+  
+  <!-- Right stack (B) - green -->
+  <rect x="18" y="14" width="8" height="3" fill="#66bb6a"/>
+  <rect x="18" y="18" width="6" height="3" fill="#66bb6a"/>
+  
+  <!-- Arrow showing movement -->
+  <path d="M 14 8 L 18 8 L 18 6 L 22 9 L 18 12 L 18 10 L 14 10 Z" fill="#ff6e40"/>
+</svg>

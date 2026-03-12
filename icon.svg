@@ -1,0 +1,76 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for modern look -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f0f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e65100;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6e40;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0277bd;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40c4ff;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2e7d32;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#66bb6a;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.3"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="256" height="256" rx="32" fill="url(#bgGradient)"/>
+  
+  <!-- Stack A (left) -->
+  <g id="stack-a">
+    <rect x="40" y="180" width="35" height="8" rx="2" fill="url(#blueGradient)" filter="url(#shadow)"/>
+    <rect x="40" y="168" width="50" height="8" rx="2" fill="url(#blueGradient)" filter="url(#shadow)"/>
+    <rect x="40" y="156" width="25" height="8" rx="2" fill="url(#blueGradient)" filter="url(#shadow)"/>
+    <rect x="40" y="144" width="45" height="8" rx="2" fill="url(#blueGradient)" filter="url(#shadow)"/>
+    <rect x="40" y="132" width="30" height="8" rx="2" fill="url(#blueGradient)" filter="url(#shadow)"/>
+    
+    <!-- Stack A label -->
+    <text x="70" y="210" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#40c4ff" text-anchor="middle">A</text>
+  </g>
+  
+  <!-- Stack B (right) -->
+  <g id="stack-b">
+    <rect x="156" y="180" width="40" height="8" rx="2" fill="url(#greenGradient)" filter="url(#shadow)"/>
+    <rect x="156" y="168" width="28" height="8" rx="2" fill="url(#greenGradient)" filter="url(#shadow)"/>
+    <rect x="156" y="156" width="52" height="8" rx="2" fill="url(#greenGradient)" filter="url(#shadow)"/>
+    
+    <!-- Stack B label -->
+    <text x="186" y="210" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#66bb6a" text-anchor="middle">B</text>
+  </g>
+  
+  <!-- Moving element (animation hint) -->
+  <g id="moving-element" opacity="0.9">
+    <rect x="95" y="100" width="66" height="8" rx="2" fill="url(#accentGradient)" filter="url(#shadow)" transform="rotate(-15 128 104)"/>
+  </g>
+  
+  <!-- Push-swap text -->
+  <text x="128" y="50" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#e0e0e0" text-anchor="middle">PUSH-SWAP</text>
+  <text x="128" y="70" font-family="Arial, sans-serif" font-size="12" fill="#888" text-anchor="middle">SIMULATOR</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="30" cy="30" r="3" fill="#e65100" opacity="0.6"/>
+  <circle cx="226" cy="30" r="3" fill="#0277bd" opacity="0.6"/>
+  <circle cx="30" cy="226" r="3" fill="#2e7d32" opacity="0.6"/>
+  <circle cx="226" cy="226" r="3" fill="#e65100" opacity="0.6"/>
+</svg>
