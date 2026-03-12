@@ -1,4 +1,4 @@
-name: Tests
+name: Test and deploy
 
 on:
   push:
@@ -50,3 +50,7 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+      
+    - name: Output deployment URL
+      run: |
+        echo "🚀 Deployed to: ${{ steps.deployment.outputs.url }}"

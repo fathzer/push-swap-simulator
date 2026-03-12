@@ -273,7 +273,9 @@ export class PushSwapApp {
 
     #clearLastDiff() {
         this.#sims[0].setMovesSelection(-1, -1, null);
-        this.#sims[1].setMovesSelection(-1, -1, null);
+        if (this.#sims[1]) {
+            this.#sims[1].setMovesSelection(-1, -1, null);
+        }
         this.#lastDiff = PushSwapApp.#EMPTY_LAST_DIFF;
     }
 }
