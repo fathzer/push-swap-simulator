@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Push_swap Diff-Debugger & Optimizer</title>
+    <style>
+        :root { --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; --accent: #e65100; --blue: #0277bd; --green: #2e7d32; }
+        
+        /* RESET & BASE */
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #e0e0e0; margin: 0; padding: 10px; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; overflow: hidden; }
+        input[type=text], input[type=number] { background: #000; color: #fff; border: 1px solid var(--border); padding: 6px; border-radius: 4px; }
+
+        /* BOUTONS GLOBAUX (Toolbar & Header) */
+        .btn-header, .btn-action, .btn-merge { 
+            padding: 8px 12px; background: var(--blue); color: white; border: none; border-radius: 4px; 
+            cursor: pointer; font-weight: bold; font-size: 12px; transition: all 0.2s; 
+        }
+        .btn-header:disabled, .btn-action:disabled, .btn-merge:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
+        
+        /* HOVER UNIVERSEL */
+        .btn-header:not(:disabled):hover, .btn-action:not(:disabled):hover, .btn-merge:not(:disabled):hover { 
+            filter: brightness(1.2); box-shadow: 0 0 8px rgba(255,255,255,0.1); 
+        }
+
+        /* SPECIFICITÉS SIDEBAR (Taille réduite & Gris par défaut) */
+        .ps-sidebar .btn-action { padding: 4px; font-size: 10px; background: #333; border: 1px solid #444; }
+        .ps-sidebar .btn-mode-edit { font-size: 9px; padding: 3px; background: #222; }
+        .ps-sidebar .btn-mode-edit.active { background: var(--blue); border-color: #40c4ff; }
+        .ps-sidebar .btn-delete { margin-top: 4px; width: 100%; font-weight: bold; }
+
+        /* COULEURS ET ÉTATS SPÉCIFIQUES */
+        .btn-play-style { background: var(--accent) !important; }
+        .btn-stop-style { background: #b71c1c !important; }
+        .btn-blue-style { background: var(--blue) !important; }
+        .btn-mode.active { background: var(--green); }
+
+        /* LAYOUT STRUCTURE */
+        header { background: var(--panel); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
+        #sync-controls { background: #252525; padding: 10px; border-radius: 8px; border: 1px solid #444; display: flex; gap: 8px; align-items: center; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); flex-shrink: 0; }
+        #main-wrapper { display: flex; gap: 10px; flex-grow: 1; min-height: 0; overflow: hidden; }
+        
+        /* COMPONENTS */
+        .ps-component { flex: 1; display: flex; flex-direction: row; gap: 12px; background: var(--panel); padding: 12px; border-radius: 10px; border: 1px solid var(--border); min-width: 0; height: 100%; box-sizing: border-box; }
+        .ps-sidebar { width: 200px; display: flex; flex-direction: column; gap: 4px; height: 100%; flex-shrink: 0; }        
+        .controls-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 2px; }
+        .edit-mode-container { display: flex; gap: 2px; margin-bottom: 4px; }
+        
+        /* MOVES DISPLAY */
+        .moves-display { flex-grow: 1; background: #000; border: 1px solid var(--border); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; overflow-y: auto; outline: none; line-height: 1.6; min-height: 0; }
+        .moves-display-anchor { flex-grow: 1; display: flex; flex-direction: column; min-height: 0; }
+        .move-item { color: #777; /*padding-right: 2px; padding-left: 2px;*/ cursor: pointer; /*border-bottom: 1px solid transparent; */}
+        .move-past { color: #fff; }
+        /*.move-current { color: #fff; background: var(--blue); font-weight: bold; border-radius: 2px; } // May be reused for selection*/
+        .move-diff-neutral { background: #a03800 !important; font-weight: bold; }
+        .move-diff-better { background: #286b2c !important; font-weight: bold; }
+        .move-diff-worse { background: #7d0101 !important; font-weight: bold; }
+
+        /* VISUALIZER & STACKS */
+        .ps-visualizer { display: flex; gap: 8px; flex-grow: 1; height: 100%; min-width: 0; }
+        .stack-container { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; min-height: 0; }
+        .stack-container strong { text-align: center; font-size: 12px; padding-bottom: 5px; color: #888; }
+        .stack { border: 1px solid var(--border); flex: 1; background: #0a0a0a; border-radius: 4px; padding: 4px; box-sizing: border-box; overflow-y: auto; display: block; min-height: 0; }
+        .success-border { border: 2px solid #0a0 !important; box-shadow: 0 0 7px 4px rgba(0, 255, 0, 0.4); }
+
+        /* ELEMENTS */
+        .element { display: flex; align-items: center; margin: 1px 0; height: 14px; border-radius: 1px; position: relative; background: #222; width: 100%; }
+        .el-label { position: absolute; left: 3px; z-index: 5; color: white; font-size: 8px; font-weight: bold; text-shadow: 1px 1px 1px #000; }
+        .el-bar { height: 100%; z-index: 1; }
+
+        /* INDICATORS & MERGE */
+        #stack-match-indicator { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid #444; }
+        .match-true { background: var(--green); color: white; box-shadow: 0 0 10px rgba(46,125,50,0.5); }
+        .match-false { background: #b71c1c; color: white; opacity: 0.7; }
+        .merge-zone { display: flex; gap: 5px; border-left: 2px solid var(--accent); padding-left: 10px; margin-left: 10px; }
+        .diff-badge { background: #333; padding: 2px 6px; border-radius: 4px; font-size: 10px; color: #aaa; border: 1px solid #444; }
+        .toolbar-moves { display: flex; justify-content: flex-end; gap: 8px; }
+        .icon-btn { background: none; border: none; color: #888; cursor: pointer; font-size: 14px; padding: 2px; }
+        
+        /* BUTTON ANIMATION FEEDBACK */
+        .btn-no-diff { 
+            background: #666 !important; 
+            color: #fff !important;
+            animation: pulse 1.5s ease-in-out;
+            position: relative;
+        }
+        .btn-no-diff::after {
+            content: 'No differences found!';
+            position: absolute;
+            top: -25px;
+            right: 0;
+            background: #333;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            animation: fadeInOut 1.5s ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateY(5px); }
+            20%, 80% { opacity: 1; transform: translateY(0); }
+        }
+    /* SVG ICONS FOR NAVIGATION BUTTONS */
+        .btn-prev::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            vertical-align: middle;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='2' height='12' fill='white'/%3E%3Cpath d='M10 1 L4 6 L10 11 Z' fill='white'/%3E%3C/svg%3E");
+        }
+        .btn-next::after {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-left: 4px;
+            vertical-align: middle;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 1 L8 6 L2 11 Z' fill='white'/%3E%3Crect x='10' y='0' width='2' height='12' fill='white'/%3E%3C/svg%3E");
+        }
+        .btn-play::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            vertical-align: middle;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 1 L8 6 L2 11 Z' fill='white'/%3E%3Cpath d='M7 1 L13 6 L7 11 Z' fill='white'/%3E%3C/svg%3E");
+        }
+        .btn-stop::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            vertical-align: middle;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='10' height='10' fill='white'/%3E%3C/svg%3E");
+        }
+        .btn-skip-diff::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 12px;
+            margin-left: 4px;
+            vertical-align: middle;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1 L7 6 L1 11 Z' fill='white'/%3E%3Cpath d='M6 1 L12 6 L6 11 Z' fill='white'/%3E%3Crect x='14' y='0' width='2' height='12' fill='white'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <input type="text" id="globalInput" placeholder="Number series..." style="flex-grow: 1; min-width: 200px;">
+        <input type="number" id="randomSize" value="100" style="width: 55px;">
+        
+        <button id="btn-random" class="btn-header">Random</button>
+        <button id="btn-apply" class="btn-header">Apply/Reset Stacks</button>
+        <button id="compareToggle" class="btn-header btn-mode">Compare: OFF</button>
+    </header>
+
+    <div id="sync-controls" style="display: none;">
+        <span style="font-size: 11px; font-weight: bold; color: var(--accent);">SYNC:</span>
+        <button id="btn-sync-prev" class="btn-header btn-prev btn-play-style">PREV</button>
+        <button id="btn-sync-next" class="btn-header btn-next btn-play-style">NEXT</button>
+        <button id="btn-sync-play" class="btn-header btn-play btn-play-style">FAST FWD</button>
+        <button id="btn-sync-stop" class="btn-header btn-stop btn-stop-style" disabled>STOP</button>
+
+        <button id="btn-find-main" class="btn-header" style="background: #6a1b9a">FIND NEXT DIFF 🔍</button>
+        
+        <div id="merge-tools" class="merge-zone" style="display: none;">
+            <button id="btn-skip-diff" class="btn-merge btn-skip-diff">SKIP DIFF</button>
+            <div id="diff-stats" style="display: flex; gap: 5px; align-items: center; margin: 0 5px;"></div>
+            <button id="btn-merge-a-to-b" class="btn-merge">1 → 2</button>
+            <button id="btn-merge-b-to-a" class="btn-merge">2 ← 1</button>
+        </div>
+
+        <div id="stack-match-indicator" class="match-false">STACKS: DIVERGENT</div>
+    </div>
+
+    <div id="main-wrapper"></div>
+
+    <script type="module">
+        import { PushSwapApp } from './js/app.js';
+        new PushSwapApp();
+    </script>
+</body>
+</html>
