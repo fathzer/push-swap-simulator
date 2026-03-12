@@ -1,12 +1,16 @@
-![Push-Swap Simulator](icon.svg)
-
 # push-swap-simulator
 A pure javascript web simulator for the push-swap problem
 
 ## What is Push-Swap Simulator?
 
+<a href="https://fathzer.github.io/push-swap-simulator/" target="_blank">
+  <img src="icon.svg" alt="Push-Swap Simulator Icon" width="200" align="left" style="margin-right: 20px; margin-bottom: 10px;">
+</a>
+
 Push-swap-simulator is a pure JavaScript web application that provides interactive visualization and debugging tools for the push-swap algorithmic problem. The push-swap problem is a sorting challenge where you must sort a stack of integers (stack A) using only two stacks and a limited set of operations. The goal is to achieve a sorted sequence in stack A with stack B empty, using the minimum number of operations.
 
+<br clear="left">
+<br>
 This simulator allows users to:
 - Visualize stack states and operations in real-time
 - Debug move sequences by stepping through them
@@ -57,26 +61,6 @@ The initial state has unsorted integers in stack A and an empty stack B. The goa
   - Edit modes for different insertion behaviors
   - Visual feedback system for user actions
 
-
-## Technical Stack
-
-The push-swap-simulator is a pure client-side application with no server-side components or external runtime dependencies:
-
-Aspect	Technology
-Language	Modern JavaScript (ES6+ modules)
-Runtime	Web Browser (Chrome, Firefox, Safari, Edge)
-Persistence	Browser localStorage API
-Rendering	Native DOM manipulation
-Animation	requestAnimationFrame API
-Testing	Bun test runner
-Deployment	GitHub Pages (static hosting)
-CI/CD	GitHub Actions
-License	GNU General Public License v3.0
-
-No External Libraries: The application intentionally avoids frameworks and libraries, using only browser-native APIs. This eliminates dependency management and reduces complexity.
-
-Development Dependencies: The only development dependency is bun-types for TypeScript definitions when running tests with Bun.
-
 ## Common User Journeys
 
 ### Single Solution Testing
@@ -91,33 +75,10 @@ Enter numbers → Apply → Enable compare mode → Paste sequence A in sim 1 �
 
 Load two solutions → Find next diff → Analyze which segment is better → Merge better segment → Continue finding diffs → Export optimized solution
 
-## Getting Started
-## Quick Start (Local Usage)
-
-1 - Clone the repository:
-
-```bash
-git clone https://github.com/fathzer/push-swap-simulator
-cd push-swap-simulator
-```
-
-2 - Open the application:
-
-Use a local web server, for instance with Python:
-```bash
-python3 -m http.server 8000
-```
-then navigate to http://localhost:8000/www/
-
-*Please note that directly use a browser to open the `www/index.html` file will not work due to modern browser CORS policy*.
-
-3 - Try it out:
-
-- Enter numbers in the input field (e.g., "4 2 1 3") or enter a number in the input field near the "Random" button 
-- Click "Apply/Reset Stacks"
-- Click operation buttons (sa, pb, ra, etc.) to execute moves
-- Or paste a move sequence directly into the moves display area
-
 ## Development Setup
 
-Please refer to the [![DeepWiki AI generated documentation](https://deepwiki.com/badge.svg)](https://deepwiki.com/fathzer/push-swap-simulator) for development setup instructions.
+Please refer to the [![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/fathzer/push-swap-simulator) documentation for development setup instructions.
+
+Please note that this documentation is AI generated and may contain errors: For instance, in the "Quick start" chapter of the "Overview" page, the proposal "*Open www/index.html directly in a web browser*" will not work due to modern browser CORS policy. You'll have to launch a web server.
+
+Feel free to ask if something is not clear or post an issue about errors found in this documention.
