@@ -144,10 +144,9 @@ export class TwoStacksView {
             const el = document.createElement('div');
             el.className = 'element';
             const width = maxVal !== 0 ? (Math.abs(val) / maxVal) * 100 : 0;
-            el.innerHTML = `
-                <span class="el-label">${val}</span>
-                <div class="el-bar" style="width:${width}%; background:hsl(${200 + (width * 1.2)},70%,50%)"></div>
-            `;
+            el.textContent = val;
+            el.style.setProperty('--width', `${width}%`);
+            el.style.setProperty('--hue', 200 + (width * 1.2));
             element.appendChild(el);
         }
     }
