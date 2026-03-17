@@ -222,7 +222,7 @@ export class PushSwapApp {
         if (!convA || !convB) {
             Feedback.animateButton(document.getElementById('btn-find-main'), 'No convergence found!');
         } else {
-            const lenA = convA - offA, lenB = convB - offB;
+            const lenA = convA - offA + 1, lenB = convB - offB + 1;
             // Appliquer les nouvelles sélections avec les bons types
             this.#sims[0].setMovesSelection(offA, convA, this.#getHightLightClass(lenA, lenB));
             this.#sims[1].setMovesSelection(offB, convB, this.#getHightLightClass(lenB, lenA));

@@ -10,6 +10,7 @@ export class ListView {
     #currentIndex = -1;
     #onItemMouseEnter;
     #onItemClicked;
+    #onListBulkChanged;
     #visibleRange = { start: 0, end: 0 }; // Cache de la plage visible
     #selection = { start: -1, end: -1, type: null }; // Mémorisation de la sélection
     #editMode = 'truncate';
@@ -23,6 +24,7 @@ export class ListView {
         this.#id = id;
         this.#onItemMouseEnter = options.onItemMouseEnter || null;
         this.#onItemClicked = options.onItemClicked || null;
+        this.#onListBulkChanged = options.onListBulkChanged || null;
         
         container.innerHTML = `
             <div style="font-weight: bold; font-size: 11px; color: #888; display:flex; justify-content:space-between; align-items:center;">
@@ -101,6 +103,9 @@ export class ListView {
             }
             if (redraw) {
                 this.#render();
+            }
+            if (this.#onListBulkChanged) {
+                this.#onListBulkChanged();
             }
         } else if (indexChanged && redraw) {
             // Seul l'index a changé, on met juste à jour les classes

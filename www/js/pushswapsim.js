@@ -48,7 +48,7 @@ export class PushSwapSim {
         const movesView = this.#container.querySelector('.moves-display-anchor');
         this.#movesView = new ListView(movesView, id, title,{
             onItemClicked: (index) => {
-                this.#rebuildStacks(index);
+                this.#rebuildStacks();
                 this.#render();
             },
             onItemMouseEnter: (move, i, el) => {
@@ -59,6 +59,13 @@ export class PushSwapSim {
                     title += ` - Pushed value: ${val}`;
                 }
                 el.title = title;
+            },
+            onListBulkChanged: () => {
+                if (this.#movesView) {
+                    this.#rebuildStacks();
+                    this.#render();
+                    this.#stateChanged();
+                }
             }
         });
         this.#speedInput = this.#container.querySelector('.speed-range');
