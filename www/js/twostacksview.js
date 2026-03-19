@@ -1,24 +1,15 @@
+import { CircularList } from './circularList.js';
+import { StackDrawer } from './stackDrawer.js';
+import { Stack } from './stack.js';
+
 export class TwoStacksView {
     #container;
     #viewA;
     #viewB;
+    #drawer
     #stacks;
     #renderScheduled = false;
     
-    static #moveActions = {
-        'sa': (view) => view.#swapTopElements(view.#viewA),
-        'sb': (view) => view.#swapTopElements(view.#viewB),
-        'ss': (view) => { view.#swapTopElements(view.#viewA); view.#swapTopElements(view.#viewB); },
-        'pa': (view) => view.#pushElement(view.#viewB, view.#viewA),
-        'pb': (view) => view.#pushElement(view.#viewA, view.#viewB),
-        'ra': (view) => view.#rotateStack(view.#viewA),
-        'rb': (view) => view.#rotateStack(view.#viewB),
-        'rr': (view) => { view.#rotateStack(view.#viewA); view.#rotateStack(view.#viewB); },
-        'rra': (view) => view.#reverseRotateStack(view.#viewA),
-        'rrb': (view) => view.#reverseRotateStack(view.#viewB),
-        'rrr': (view) => { view.#reverseRotateStack(view.#viewA); view.#reverseRotateStack(view.#viewB); }
-    };
-
     constructor(parentContainer) {
         this.#container = parentContainer;
         this.#container.classList.add('ps-visualizer');
@@ -27,8 +18,9 @@ export class TwoStacksView {
             <div class="stack-container"><strong>B</strong><div class="stack stack-b"></div></div>
         `;
 
-        this.#viewA = this.#container.querySelector('.stack-a');
-        this.#viewB = this.#container.querySelector('.stack-b');
+        this.#drawer = new StackDrawer(0);
+        this.#viewA = new CircularList(this.#container.querySelector('.stack-a'), new Stack([]),{}, this.#drawer.draw);
+        this.#viewB = new CircularList(this.#container.querySelector('.stack-b'), new Stack([]),{}, this.#drawer.draw);
     }
 
     /**
@@ -49,61 +41,7 @@ export class TwoStacksView {
     applyMove(move) {
         // Apply the move to the data model first
         this.#stacks.applyMove(move);
-        
-        // Apply DOM manipulation for the move
-        this.#applyDOMMove(move);
-    }
-
-    #applyDOMMove(move) {
-        TwoStacksView.#moveActions[move](this);
-
-        // Update visual feedback
-        this.#container.classList.toggle('success-border', this.#stacks.isSorted());
-    }
-
-    #swapTopElements(viewElement) {
-        const elements = viewElement.children;
-        if (elements.length < 2) return;
-        
-        // Swap the first two elements using modern DOM methods
-        const first = elements[0];
-        const second = elements[1];
-        
-        // Insert second before first, then first before second
-        second.before(first);
-        first.before(second);
-    }
-
-    #pushElement(fromView, toView) {
-        const fromElements = fromView.children;
-        if (fromElements.length === 0) return;
-        
-        // Move the top element from source to destination
-        const topElement = fromElements[0];
-        
-        // Move the element from source to destination
-        topElement.remove();
-        toView.insertBefore(topElement, toView.firstChild);
-    }
-
-    #rotateStack(viewElement) {
-        const elements = viewElement.children;
-        if (elements.length < 2) return;
-        
-        // Move the first element (top) to the end (bottom)
-        const topElement = elements[0];
-        topElement.remove();
-        viewElement.appendChild(topElement);
-    }
-
-    #reverseRotateStack(viewElement) {
-        const elements = viewElement.children;
-        if (elements.length < 2) return;
-        
-        // Move the last element (bottom) to the beginning (top)
-        const bottomElement = elements[elements.length - 1];
-        bottomElement.remove();
-        viewElement.insertBefore(bottomElement, viewElement.firstChild);
+        this.#scheduleRender();
     }
 
     #scheduleRender() {
@@ -131,23 +69,11 @@ export class TwoStacksView {
             maxVal = Math.max(...allValues.map(Math.abs));
         }
 
-        this.#drawStack(stackA, this.#viewA, maxVal);
-        this.#drawStack(stackB, this.#viewB, maxVal);
+        this.#drawer.setMaxValue(maxVal);
+        this.#viewA.setItems(stackA);
+        this.#viewB.setItems(stackB);
 
         // Feedback visuel du tri
         this.#container.classList.toggle('success-border', this.#stacks.isSorted());
-    }
-
-    #drawStack(stack, element, maxVal) {
-        element.innerHTML = '';
-        for (const val of stack.iterator()) {
-            const el = document.createElement('div');
-            el.className = 'element';
-            const width = maxVal !== 0 ? (Math.abs(val) / maxVal) * 100 : 0;
-            el.textContent = val;
-            el.style.setProperty('--width', `${width}%`);
-            el.style.setProperty('--hue', 200 + (width * 1.2));
-            element.appendChild(el);
-        }
     }
 }

@@ -7,7 +7,7 @@
 // items   : tout objet exposant .get(index) et .getSize()
 //           (utiliser ListAdapter pour wrapper un tableau simple)
 //
-// options : { itemHeight=52, gap=6, wheelStep=40, friction=0.92 }
+// options : { itemHeight=14, gap=0, wheelStep=40, friction=0.92 }
 //
 // draw    : (ctx, value, index, x, y, width, height) => void
 //           appelée pour chaque élément visible à chaque frame
@@ -39,7 +39,6 @@ export class CircularList {
   #lastY    = 0;
   #lastT    = 0;
 
-  // Références aux handlers pour pouvoir les détacher proprement
   #onWheel;
   #onMouseDown;
   #onMouseMove;
@@ -54,8 +53,8 @@ export class CircularList {
     this.#items     = items;
     this.#drawFn    = draw;
     this.#opt = {
-      itemHeight: 52,
-      gap:        6,
+      itemHeight: 14,
+      gap:        0,
       wheelStep:  40,
       friction:   0.92,
       ...options

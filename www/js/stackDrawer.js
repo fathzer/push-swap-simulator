@@ -16,19 +16,13 @@
 // avec hue = 200 + ratio * 120  (bleu ciel → violet)
 // =============================================================================
 
-import { ListAdapter } from './circularList.js';
-
 export class StackDrawer {
-  #items;
   #maxValue;
 
   /**
-   * @param {ListAdapter} items     - ListAdapter contenant des entiers >= 0
    * @param {number}      maxValue  - valeur correspondant à 100%
    */
-  constructor(items, maxValue) {
-    console.log('StackDrawer constructor', items, maxValue);
-    this.#items    = items;
+  constructor(maxValue) {
     this.#maxValue = maxValue;
 
     // On bind draw() pour qu'il puisse être passé directement à CircularList
@@ -38,16 +32,8 @@ export class StackDrawer {
 
   // ── API publique ───────────────────────────────────────────────────────────
 
-  setItems(items) {
-    this.#items = items;
-  }
-
   setMaxValue(maxValue) {
     this.#maxValue = maxValue;
-  }
-
-  getItems() {
-    return this.#items;
   }
 
   // ── Rendu ──────────────────────────────────────────────────────────────────

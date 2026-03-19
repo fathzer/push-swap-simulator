@@ -103,6 +103,74 @@ describe('Stack', () => {
         });
     });
 
+    describe('get', () => {
+        it('returns top element when index is 0', () => {
+            const s = new Stack([1, 2, 3]);
+            expect(s.get(0)).toBe(1);
+        });
+
+        it('returns second element when index is 1', () => {
+            const s = new Stack([1, 2, 3]);
+            expect(s.get(1)).toBe(2);
+        });
+
+        it('returns bottom element when index is last', () => {
+            const s = new Stack([1, 2, 3]);
+            expect(s.get(2)).toBe(3);
+        });
+
+        it('returns undefined for negative index', () => {
+            const s = new Stack([1, 2, 3]);
+            expect(s.get(-1)).toBeUndefined();
+        });
+
+        it('returns undefined for index out of bounds', () => {
+            const s = new Stack([1, 2, 3]);
+            expect(s.get(3)).toBeUndefined();
+            expect(s.get(10)).toBeUndefined();
+        });
+
+        it('returns undefined on empty stack', () => {
+            const s = new Stack();
+            expect(s.get(0)).toBeUndefined();
+            expect(s.get(5)).toBeUndefined();
+        });
+
+        it('works with single element stack', () => {
+            const s = new Stack([42]);
+            expect(s.get(0)).toBe(42);
+            expect(s.get(1)).toBeUndefined();
+        });
+
+        it('does not modify the stack', () => {
+            const s = new Stack([1, 2, 3]);
+            s.get(0);
+            s.get(1);
+            s.get(2);
+            expect(toArray(s)).toEqual([1, 2, 3]); // Stack unchanged
+        });
+
+        it('works with larger stacks', () => {
+            const s = new Stack([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(s.get(0)).toBe(1);
+            expect(s.get(4)).toBe(5);
+            expect(s.get(9)).toBe(10);
+            expect(s.get(10)).toBeUndefined();
+        });
+
+        it('works after stack operations', () => {
+            const s = new Stack([1, 2, 3]);
+            s.push(0);
+            expect(s.get(0)).toBe(0);
+            expect(s.get(1)).toBe(1);
+            expect(s.get(3)).toBe(3);
+            
+            s.pop();
+            expect(s.get(0)).toBe(1);
+            expect(s.get(2)).toBe(3);
+        });
+    });
+
     describe('swap', () => {
         it('swaps the two top elements', () => {
             const s = new Stack([1, 2, 3]);
