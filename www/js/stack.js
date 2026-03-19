@@ -51,6 +51,18 @@ export class Stack {
     }
 
     /**
+     * Renvoie la valeur à l'index spécifié.
+     * Index 0 correspond au sommet de la pile.
+     * Renvoie undefined si l'index est hors limites.
+     */
+    get(index) {
+        if (index < 0 || index >= this.#data.length) {
+            return undefined;
+        }
+        return this.#data[this.#data.length - 1 - index];
+    }
+
+    /**
      * Décale tous les éléments vers le haut d'une position.
      * Le premier élément devient le dernier (ra / rb).
      */
@@ -106,7 +118,6 @@ export class Stack {
         return this.#data.every((val, index) => val === otherData[index]);
     }
 
-    // Utile pour le debug ou l'export
     getSize() {
         return this.#data.length;
     }
