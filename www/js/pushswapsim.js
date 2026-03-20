@@ -153,7 +153,11 @@ export class PushSwapSim {
         const invalidOp = newList.find(op => !PushSwapSim.#VALID_MOVES.has(op.toLowerCase()));        
         if (invalidOp) throw new Error(`Invalid move: "${invalidOp}"`);
 
-        this.#movesView.update([...newList], 0); 
+        let newIndex = this.#movesView.getIndex();
+        if (newIndex >= newList.length) {
+            newIndex = -1;
+        }
+        this.#movesView.update([...newList], newIndex);
 
         // Rebuild stacks in TwoStacksView
         this.#rebuildStacks();
@@ -273,7 +277,7 @@ export class PushSwapSim {
 
     setMovesSelection(start, end, className) {
         this.#movesView.clearSelection();
-        if (start < end) this.#movesView.applySelection(start, end, className);
+        if (start <= end) this.#movesView.applySelection(start, end, className);
     }
 
     #sliderToMovesPerSecond(sliderValue) {

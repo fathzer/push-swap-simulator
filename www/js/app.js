@@ -49,8 +49,8 @@ export class PushSwapApp {
             this.#checkIfMatch() ? this.#findNextDiff() : this.#findNextConvergenceOnly();
         });
         this.#bindClick('#btn-skip-diff', () => this.#skipToConvergence());
-        this.#bindClick('#btn-merge-a-to-b', () => this.#replaceMoveZone('A', 'B'));
-        this.#bindClick('#btn-merge-b-to-a', () => this.#replaceMoveZone('B', 'A'));
+        this.#bindClick('#btn-merge-a-to-b', () => this.#replaceMoveZone(true));
+        this.#bindClick('#btn-merge-b-to-a', () => this.#replaceMoveZone(false));
     }
 
     #bindClick(selector, fn) {
@@ -247,27 +247,28 @@ export class PushSwapApp {
         if (this.#lastDiff.convA === -1) return;
         this.#sims[0].setIndex(this.#lastDiff.convA);
         this.#sims[1].setIndex(this.#lastDiff.convB);
-        this.#sims[0].setMovesSelection(this.#lastDiff.offA, this.#lastDiff.convA, null);
-        this.#sims[1].setMovesSelection(this.#lastDiff.offB, this.#lastDiff.convB, null);
-        document.getElementById('merge-tools').style.display = 'none';
+        this.#clearLastDiff();
     }
 
-    #replaceMoveZone(fromLabel, toLabel) {
-        const fromSim = fromLabel === 'A' ? this.#sims[0] : this.#sims[1];
-        const toSim = toLabel === 'A' ? this.#sims[0] : this.#sims[1];
+    #replaceMoveZone(leftToRight) {
+        const fromSim = leftToRight ? this.#sims[0] : this.#sims[1];
+        const toSim = leftToRight ? this.#sims[1] : this.#sims[0];
         const { offA, offB, convA, convB } = this.#lastDiff;
 
-        const startFrom = fromLabel === 'A' ? offA : offB;
-        const endFrom = fromLabel === 'A' ? convA : convB;
-        const startTo = toLabel === 'A' ? offA : offB;
-        const endTo = toLabel === 'A' ? convA : convB;
+        const startFrom = leftToRight ? offA : offB;
+        const endFrom = leftToRight ? convA : convB;
+        const startTo = leftToRight ? offB : offA;
+        const endTo = leftToRight ? convB : convA;
 
         if (endFrom === -1 || endTo === -1) return;
 
-        const newMoves = fromSim.getMovesList().slice(startFrom, endFrom);
+        const newMoves = fromSim.getMovesList().slice(startFrom, endFrom + 1);
         const updatedMoves = toSim.getMovesList(); 
-        updatedMoves.splice(startTo, endTo - startTo, ...newMoves);
+        updatedMoves.splice(startTo, endTo - startTo + 1, ...newMoves);
         toSim.setMovesList(updatedMoves);
+        fromSim.setIndex(endFrom);
+        toSim.setIndex(startTo + newMoves.length - 1);
+        this.#clearLastDiff();
         this.#refreshGlobalUI();
     }
 
@@ -277,5 +278,6 @@ export class PushSwapApp {
             this.#sims[1].setMovesSelection(-1, -1, null);
         }
         this.#lastDiff = PushSwapApp.#EMPTY_LAST_DIFF;
+        document.getElementById('merge-tools').style.display = 'none';
     }
 }
