@@ -22,6 +22,7 @@ export class PushSwapApp {
         // Callback de notification pour les composants
         const refreshCB = () => this.#refreshGlobalUI();
         
+		this.#sims = [];
         this.#sims.push(new PushSwapSim('main-wrapper', 'left', 'VERSION 1', refreshCB));
         if (this.#compareMode) {
             this.#sims.push(new PushSwapSim('main-wrapper', 'right', 'VERSION 2', refreshCB));
@@ -150,7 +151,7 @@ export class PushSwapApp {
     // --- COMPARAISON & DIFF ---
 
     #checkIfMatch() {
-        if (this.#sims.length < 2) return true;
+        if (!this.#compareMode) return true;
         return this.#sims[0].getStacks(false).equals(this.#sims[1].getStacks(false));
     }
 
