@@ -8,9 +8,8 @@ A pure javascript web simulator for the push-swap problem
 </a>
 
 Push-swap-simulator is a pure JavaScript web application that provides interactive visualization and debugging tools for the push-swap algorithmic problem. The push-swap problem is a sorting challenge where you must sort a stack of integers (stack A) using only two stacks and a limited set of operations. The goal is to achieve a sorted sequence in stack A with stack B empty, using the minimum number of operations.
-
 <br clear="left">
-<br>
+
 This simulator allows users to:
 - Visualize stack states and operations in real-time
 - Debug move sequences by stepping through them
@@ -19,8 +18,7 @@ This simulator allows users to:
 
 It is publicly available at https://fathzer.github.io/push-swap-simulator/
 
-
-## The Push-Swap Problem Domain
+## The Push-Swap Problem Domain
 
 The push-swap problem operates on two LIFO stacks (A and B) with 11 permitted operations:
 
