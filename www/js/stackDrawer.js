@@ -3,17 +3,10 @@
 //               de barres dégradées, avec une valeur de référence pour 100%.
 //
 // Usage :
-//   const drawer = new StackDrawer(items, maxValue);
+//   const drawer = new StackDrawer(maxValue);
 //   drawer.draw(ctx, value, index, x, y, w, h);   // passé à CircularList
 //
-//   drawer.setItems(items)      // remplace la liste (ListAdapter d'entiers)
 //   drawer.setMaxValue(max)     // redéfinit la référence 100%
-//
-// Le dégradé reproduit le CSS original :
-//   background: linear-gradient(to right,
-//     hsl(hue, 70%, 50%) var(--width),
-//     #222               var(--width))
-// avec hue = 200 + ratio * 120  (bleu ciel → violet)
 // =============================================================================
 
 export class StackDrawer {
@@ -54,7 +47,7 @@ export class StackDrawer {
     // Teinte : hue = 200 + ratio * 120  (bleu ciel 200° → violet 320°)
     const hue   = 200 + ratio * 120;
     const color = `hsl(${hue}, 70%, 50%)`;
-    const dark  = '#222222';
+    const dark  = '#222';
 
     // Largeur du label index : calé sur le nombre de chiffres de maxValue
     const indexDigits = String(this.#maxValue).length;
@@ -87,7 +80,7 @@ export class StackDrawer {
 
     // Label index (à gauche de la barre)
     const textY = y + h / 2 + fontSize * 0.35;
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillStyle = `rgba(255,255,255, ${index === 0 ? 1 : 0.55})`;
     ctx.font      = `500 ${fontSize}px monospace`;
     ctx.fillText(indexLabel, PAD, textY);
 

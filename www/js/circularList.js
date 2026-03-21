@@ -47,6 +47,8 @@ export class CircularList {
   #onTouchMove;
   #onTouchEnd;
 
+  #lastSize = 0;
+
   // ── Constructeur ───────────────────────────────────────────────────────────
   constructor(container, items, options, draw) {
     this.#container = container;
@@ -88,8 +90,28 @@ export class CircularList {
   // ── API publique ───────────────────────────────────────────────────────────
 
   setItems(items) {
+    const newN = items.getSize();
+    const oldN = this.#lastSize;
+    if (newN === 0 || oldN === 0) {
+      this.#offset = 0;
+    } else if (oldN !== newN) {
+      const STEP = this.#opt.itemHeight + this.#opt.gap;
+
+      const oldTotalH = oldN * STEP;
+
+      // Position visuelle de l'item 0 : k-ième ligne (0 = tout en haut)
+      const norm = ((this.#offset % oldTotalH) + oldTotalH) % oldTotalH;
+      const k    = (oldN - Math.round(norm / STEP)) % oldN;
+
+      // Clamp : si la nouvelle liste a moins d'éléments que k, on prend le max possible
+      const newK = Math.min(k, newN - 1);
+
+      // Reconstruire l'offset : item 0 en k-ième position
+      const newTotalH  = newN * STEP;
+      this.#offset = ((newN - newK) * STEP) % newTotalH;
+    }
     this.#items    = items;
-    this.#offset   = 0;
+    this.#lastSize = newN;
     this.#velocity = 0;
     this.#stopInertia();
     this.#draw();
