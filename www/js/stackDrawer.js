@@ -10,6 +10,7 @@
 // =============================================================================
 
 export class StackDrawer {
+  #highlightedNumbers = [];
   #maxValue;
 
   /**
@@ -54,7 +55,8 @@ export class StackDrawer {
     const fontSize    = Math.min(11, Math.max(9, (h - MARGIN * 2) * 0.5));
 
     ctx.font = `500 ${fontSize}px monospace`;
-    const indexLabel = '#' + String(index).padStart(indexDigits, '0');
+    let indexLabel = String(index).padStart(indexDigits, '0');
+    indexLabel = (index === 0 ? ' ' : '#') + indexLabel;
     const indexW     = ctx.measureText(indexLabel).width;
 
     // barX : PAD (bord gauche) + texte index + PAD (séparation)
@@ -62,7 +64,6 @@ export class StackDrawer {
     const barMax = w - barX - PAD;       // barre jusqu'au bord droit - PAD
     const barH   = h - MARGIN * 2;
     const barY   = y + MARGIN;
-
 
     // Dégradé avec transition franche à `ratio`
     const grad = ctx.createLinearGradient(barX, 0, barX + barMax, 0);
@@ -80,12 +81,38 @@ export class StackDrawer {
 
     // Label index (à gauche de la barre)
     const textY = y + h / 2 + fontSize * 0.35;
-    ctx.fillStyle = `rgba(255,255,255, ${index === 0 ? 1 : 0.55})`;
+    const isHighlighted = this.#highlightedNumbers.includes(value);
+    if (isHighlighted) {
+      ctx.fillStyle = 'orange';
+    } else {
+      ctx.fillStyle = `rgba(255,255,255, ${index === 0 ? 1 : 0.55})`;
+    }
     ctx.font      = `500 ${fontSize}px monospace`;
     ctx.fillText(indexLabel, PAD, textY);
+
+    // Add white triangle to the left of index 0
+    if (index === 0) {
+      const triangleSize = 8;
+      const triangleX = Math.max(1, PAD - triangleSize - 2);
+      const triangleY = y + h / 2;
+      
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.moveTo(triangleX + triangleSize, triangleY);
+      ctx.lineTo(triangleX, triangleY - triangleSize/2);
+      ctx.lineTo(triangleX, triangleY + triangleSize/2);
+      ctx.closePath();
+      ctx.fill();
+    }
 
     // Valeur brute (dans la barre, côté gauche)
     ctx.fillStyle = 'rgba(255,255,255,0.85)';
     ctx.fillText(String(value), barX + PAD, textY);
+  }
+
+  highlightNumbers(numbers) {
+    // TODO: Implement highlighting logic
+    console.log('Highlighting numbers:', numbers);
+    this.#highlightedNumbers = numbers;
   }
 }

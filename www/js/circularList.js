@@ -152,6 +152,10 @@ export class CircularList {
     this.#draw();
   }
 
+  redraw() {
+    this.#draw();
+  }
+
   // ── Rendu ──────────────────────────────────────────────────────────────────
 
   #resize() {
