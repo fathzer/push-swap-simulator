@@ -38,6 +38,7 @@ The initial state has unsorted integers in stack A and an empty stack B. The goa
 
 - Interactive stack visualization with color-coded elements showing relative values
 - Infinite scroll for stacks with many elements (easier navigation to see top and bottom elements simultaneously)
+- Right-click on the stack visualization to input a number sequence to highlight
 - Move list editing with three modes: truncate, insert, and overwrite
 - Manual operation execution via button controls
 - Automatic playback with adjustable speed (AnimationRunner)

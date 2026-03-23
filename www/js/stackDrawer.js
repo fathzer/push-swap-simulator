@@ -30,6 +30,14 @@ export class StackDrawer {
     this.#maxValue = maxValue;
   }
 
+  getHighlightNumbers() {
+    return this.#highlightedNumbers;
+  }
+
+  setHighlightNumbers(numbers) {
+    this.#highlightedNumbers = numbers;
+  }
+
   // ── Rendu ──────────────────────────────────────────────────────────────────
 
   /**
@@ -108,11 +116,5 @@ export class StackDrawer {
     // Valeur brute (dans la barre, côté gauche)
     ctx.fillStyle = 'rgba(255,255,255,0.85)';
     ctx.fillText(String(value), barX + PAD, textY);
-  }
-
-  highlightNumbers(numbers) {
-    // TODO: Implement highlighting logic
-    console.log('Highlighting numbers:', numbers);
-    this.#highlightedNumbers = numbers;
   }
 }

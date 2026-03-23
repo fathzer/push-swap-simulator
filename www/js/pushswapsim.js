@@ -187,7 +187,7 @@ export class PushSwapSim {
         
         // Initialize TwoStacksView with the initial state
         const stacks = new TwoStacks(numbers, []);
-        this.#stacksView.setStacks(stacks);
+        this.#stacksView.setStacks(stacks, true);
         
         // Reset to beginning and render sidebar
         this.#movesView.setIndex(-1);
