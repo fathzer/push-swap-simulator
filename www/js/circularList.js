@@ -49,6 +49,26 @@ export class CircularList {
 
   #lastSize = 0;
 
+  // ── Méthodes utilitaires ───────────────────────────────────────────────────────
+  
+  #snapOffsetToGrid(offset) {
+    const { itemHeight, gap } = this.#opt;
+    const STEP = itemHeight + gap;
+    const n = this.#items.getSize();
+    if (!n) return offset;
+    
+    const totalH = n * STEP;
+    const norm = ((offset % totalH) + totalH) % totalH;
+    const snappedNorm = Math.round(norm / STEP) * STEP;
+    return offset + (snappedNorm - norm);
+  }
+
+  #handleDrag(dy, dt) {
+    this.#velocity = (-dy / dt) * this.#opt.itemHeight;
+    this.#offset  -= dy;
+    this.#draw();
+  }
+
   // ── Constructeur ───────────────────────────────────────────────────────────
   constructor(container, items, options, draw) {
     this.#container = container;
@@ -183,7 +203,8 @@ export class CircularList {
     const { itemHeight, gap } = this.#opt;
     const STEP   = itemHeight + gap;
     const totalH = n * STEP;
-    const norm   = ((this.#offset % totalH) + totalH) % totalH;
+    const snappedOffset = this.#snapOffsetToGrid(this.#offset);
+    const norm   = ((snappedOffset % totalH) + totalH) % totalH;
     const firstI = Math.floor(norm / STEP);
     const firstY = -(norm % STEP);
     const count  = Math.min(Math.ceil((H - firstY) / STEP), n);
@@ -246,17 +267,24 @@ export class CircularList {
       if (!this.#dragging) return;
       const now = performance.now();
       const dy  = e.clientY - this.#lastY;
-      this.#velocity = (-dy / (now - this.#lastT || 1)) * 14;
-      this.#offset  -= dy;
-      this.#lastY    = e.clientY;
-      this.#lastT    = now;
-      this.#draw();
+      const dt  = now - this.#lastT;
+      
+      this.#lastY = e.clientY;
+      this.#lastT = now;
+      this.#handleDrag(dy, dt);
     };
 
     this.#onMouseUp = () => {
       if (!this.#dragging) return;
       this.#dragging = false;
       el.style.cursor = 'grab';
+      
+      // Détecte l'immobilité : si le dernier mouvement est trop ancien
+      const timeSinceLastMove = performance.now() - this.#lastT;
+      if (timeSinceLastMove > 100) {
+        this.#velocity = 0;
+      }
+      
       this.#startInertia();
     };
 
@@ -271,14 +299,22 @@ export class CircularList {
       e.preventDefault();
       const now = performance.now();
       const dy  = e.touches[0].clientY - this.#lastY;
-      this.#velocity = (-dy / (now - this.#lastT || 1)) * 14;
-      this.#offset  -= dy;
-      this.#lastY    = e.touches[0].clientY;
-      this.#lastT    = now;
-      this.#draw();
+      const dt  = now - this.#lastT;
+      
+      this.#lastY = e.touches[0].clientY;
+      this.#lastT = now;
+      this.#handleDrag(dy, dt);
     };
 
-    this.#onTouchEnd = () => this.#startInertia();
+    this.#onTouchEnd = () => {
+      // Détecte l'immobilité : si le dernier mouvement est trop ancien
+      const timeSinceLastMove = performance.now() - this.#lastT;
+      if (timeSinceLastMove > 100) {
+        this.#velocity = 0;
+      }
+      
+      this.#startInertia();
+    };
 
     el.addEventListener('wheel',      this.#onWheel,      { passive: false });
     el.addEventListener('mousedown',  this.#onMouseDown);
