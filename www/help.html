@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Push-Swap Simulator - Help</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <style>
+        :root { --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; --accent: #e65100; --blue: #0277bd; --green: #2e7d32; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg); 
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--panel);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        h1 { 
+            color: #fff; 
+            border-bottom: 2px solid var(--accent); 
+            padding-bottom: 10px; 
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        h2 { 
+            color: #fff; 
+            border-bottom: 1px solid var(--border); 
+            padding-bottom: 8px; 
+            margin-top: 40px; 
+            margin-bottom: 20px;
+        }
+        
+        h3 { 
+            color: var(--blue); 
+            margin-top: 30px; 
+            margin-bottom: 15px;
+        }
+        
+        .icon-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .icon-container img {
+            width: 100px;
+            height: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #000;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: var(--blue);
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        code {
+            background: #000;
+            color: #4fc3f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #000;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            margin: 15px 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e0e0e0;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--blue);
+            box-shadow: 0 0 10px rgba(2,119,189,0.3);
+        }
+        
+        .feature-card h4 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .journey {
+            background: linear-gradient(135deg, #1a1a1a, #252525);
+            border-left: 4px solid var(--green);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .journey h4 {
+            color: var(--green);
+            margin-top: 0;
+        }
+        
+        .tip {
+            background: rgba(230, 81, 0, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .tip strong {
+            color: var(--accent);
+        }
+        
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: var(--border);
+            color: #fff;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+        }
+        
+        .tip ul {
+            padding-left: 15px;
+        }
+        
+        .tip li {
+            margin-bottom: 0px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon-container">
+            <img src="./favicon.svg" alt="Push-Swap Simulator Icon">
+        </div>
+        
+        <h1>Push-Swap Simulator - Help</h1>
+        
+        <h2>What is Push-Swap?</h2>
+        <p>
+            Push-swap is a sorting challenge where you must sort a stack of integers (stack A) using only two stacks and a limited set of operations. 
+            The goal is to achieve a sorted sequence in stack A with stack B empty, using the minimum number of operations.
+        </p>
+        
+        <h2>The Operations</h2>
+        <p>The push-swap problem operates on two LIFO stacks (A and B) with 11 permitted operations:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>sa</code></td><td>Swap top two elements of stack A</td></tr>
+                <tr><td><code>sb</code></td><td>Swap top two elements of stack B</td></tr>
+                <tr><td><code>ss</code></td><td>Swap top two elements of both stacks simultaneously</td></tr>
+                <tr><td><code>pa</code></td><td>Push top element from B to A</td></tr>
+                <tr><td><code>pb</code></td><td>Push top element from A to B</td></tr>
+                <tr><td><code>ra</code></td><td>Rotate stack A (top element goes to bottom)</td></tr>
+                <tr><td><code>rb</code></td><td>Rotate stack B (top element goes to bottom)</td></tr>
+                <tr><td><code>rr</code></td><td>Rotate both stacks simultaneously</td></tr>
+                <tr><td><code>rra</code></td><td>Reverse rotate stack A (bottom element goes to top)</td></tr>
+                <tr><td><code>rrb</code></td><td>Reverse rotate stack B (bottom element goes to top)</td></tr>
+                <tr><td><code>rrr</code></td><td>Reverse rotate both stacks simultaneously</td></tr>
+            </tbody>
+        </table>
+        
+        <p><strong>Initial state:</strong> Unsorted integers in stack A, empty stack B<br>
+        <strong>Goal state:</strong> Sorted integers in stack A (smallest at top), empty stack B</p>
+        
+        <h2>Key Features</h2>
+        
+        <h3>Single Simulation Mode</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Interactive Visualization</h4>
+                <p>Color-coded elements showing relative values. The size of bars is also related to their values - larger numbers have wider bars.</p>
+                <p>When the stack is correctly sorted, the stacks are highlighted in green</p>
+            </div>
+            <div class="feature-card">
+                <h4>Infinite Scroll</h4>
+                <p>Navigate easily through large stacks to see top and bottom elements simultaneously.</p>
+                <p>Use your mouse wheel or drag an element to scroll through the stack elements</p>
+            </div>
+            <div class="feature-card">
+                <h4>Highlight elements</h4>
+                <p>Right-click on stack visualization to input number sequences and highlight them in the stack</p>
+            </div>
+            <div class="feature-card">
+                <h4>Move Editing</h4>
+                <p>Edit move sequences with three modes: truncate, insert, and overwrite</p>
+            </div>
+            <div class="feature-card">
+                <h4>Manual Control</h4>
+                <p>Execute operations manually via button controls or automatic playback (with adjustable speed)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Navigation</h4>
+                <p>Step forward/backward through moves with adjustable animation speed</p>
+            </div>
+            <div class="feature-card">
+                <h4>Clipboard Support</h4>
+                <p>Copy/paste move sequences for easy sharing and testing</p>
+            </div>
+            <div class="feature-card">
+                <h4>State Persistence</h4>
+                <p>Automatic session recovery via localStorage</p>
+            </div>
+        </div>
+        
+        <h3>Comparison Mode</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Dual Simulators</h4>
+                <p>Run two solutions side-by-side with independent move sequences</p>
+            </div>
+            <div class="feature-card">
+                <h4>Convergence Detection</h4>
+                <p>Identify where solutions reach identical states</p>
+            </div>
+            <div class="feature-card">
+                <h4>Difference Highlighting</h4>
+                <p>Color-coded divergent segments:
+                    <br>• <span style="color: orange;">Orange</span>: Different but same length
+                    <br>• <span style="color: green;">Green</span>: This solution is better
+                    <br>• <span style="color: red;">Red</span>: Other solution is better
+                </p>
+            </div>
+            <div class="feature-card">
+                <h4>Move Merging</h4>
+                <p>Combine optimal segments from both solutions to create better results</p>
+            </div>
+        </div>
+        
+        <h2>How to Use</h2>
+        
+        <div class="journey">
+            <h4>🎯 Single Solution Testing</h4>
+            <ol>
+                <li>Enter numbers in the top left input field. Alternatively, enter the number of elements and click "Random" to generate random data</li>
+                <li>Click "Apply/Reset Stacks" to initialize the stacks</li>
+                <li>Execute moves manually using the operation buttons or paste a sequence</li>
+                <li>Use playback controls to review the visualization</li>
+            </ol>
+
+            <div class="tip">
+                <strong>💡 Pro Tips:</strong> <ul>
+                    <li>Scroll stacks to see both head and tail values</li>
+                    <li>If you search where is a specific integer, right click on a stack and enter the searched integer(s). This will highlight it(them)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="journey">
+            <h4>⚖️ Solution Comparison/Optimization</h4>
+            <ol>
+                <li>Enter or generate numbers and apply to both simulators</li>
+                <li>Enable "Compare: OFF" to "Compare: ON"</li>
+                <li>Paste sequence A in the left simulator</li>
+                <li>Paste sequence B in the right simulator</li>
+                <li>Use "FIND NEXT DIFF" to locate differences</li>
+                <li>Review highlighted segments to analyze performance</li>
+                <li>You may also use the merge buttons (1→2 or 1←2) to copy the better segment</li>
+                <li>Continue finding and merging differences</li>
+                <li>Export your optimized solution</li>
+            </ol>
+        </div>
+        
+        <h2>Interface Elements</h2>
+        
+        <h3>Header Controls</h3>
+        <ul>
+            <li><strong>Number series input:</strong> Enter custom integers to sort</li>
+            <li><strong>Random size:</strong> Enter size of random integers to generate</li>
+            <li><strong>Random button:</strong> Generate random integers</li>
+            <li><strong>Apply/Reset Stacks:</strong> Initialize or reset both stacks</li>
+            <li><strong>Compare toggle:</strong> Switch between single and dual-simulator mode</li>
+        </ul>
+        
+        <h3>Sync Controls (Compare Mode)</h3>
+        <ul>
+            <li><strong>PREV/NEXT:</strong> Step backward/forward through both sequences</li>
+            <li><strong>FAST FWD/STOP:</strong> Play both sequences simultaneously (The speed can be adjusted with the speed slider of version 1)</li>
+            <li><strong>FIND NEXT DIFF:</strong> Jump to the next difference between solutions</li>
+            <li><strong>FIND CONVERGENCE:</strong> Find the point where both solutions converge</li>
+            <li><strong>SKIP DIFF:</strong> Skip the current difference segment</li>
+            <li><strong>Merge buttons:</strong> Copy segments between solutions</li>
+        </ul>
+        
+        <h3>Stack Visualization</h3>
+        <ul>
+            <li><strong>Color coding:</strong> Elements are colored based on their relative values</li>
+            <li><strong>Right-click:</strong> Highlight specific number sequences in the stack by entering them in a dialog</li>
+            <li><strong>Infinite scroll:</strong> Use your mouse wheel or drag an element to scroll through the stack elements</li>
+        </ul>
+        
+        <h3>Move List</h3>
+        <ul>
+            <li><strong>Edit modes:</strong> Truncate, Insert, or Overwrite existing moves</li>
+            <li><strong>Click navigation:</strong> Click on any move to jump to that position</li>
+            <li><strong>Clipboard:</strong> Copy/paste move sequences using the clipboard buttons</li>
+        </ul>
+        
+        <h2>Development</h2>
+        <p>This simulator is a pure JavaScript web application built with modern web technologies. It runs entirely in the browser and requires no server-side components.</p>
+        
+        <p>For development setup or assistance, please visit the <a href="https://github.com/fathzer/push-swap-simulator" target="_blank">GitHub repository</a>.</p>
+        
+        <div class="tip">
+            <strong>📝 Note:</strong> This help page can be kept open while you work with the simulator for quick reference. Use Alt+Tab to switch between windows.
+        </div>
+    </div>
+</body>
+</html>
